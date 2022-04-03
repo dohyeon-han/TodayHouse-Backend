@@ -10,7 +10,10 @@
 ## 레이어 의존성
 ### DTO 변환
 ```java
-    private CategoryResponse createCategoryResponse(List<Category> categories) {
+public class CategoryResponse{
+    ..
+    ..
+    public static CategoryResponse createCategoryResponse(List<Category> categories) {
         Category rootCategory = categories.get(0);
         Map<Long, CategoryResponse> map = new HashMap<>();
         categories.stream().forEach(c -> {
@@ -21,7 +24,9 @@
         });
         return map.get(rootCategory.getId());
     }
+    ..
+}
 ```
 - 상위 카테고리 DTO에 하위 카테고리 DTO를 리스트로 추가하는 코드이다.
-- 처음에는 service에 해당 코드를 구현했다. 그런데 CategoryResponse로 반환을 하면 레이어 간의 의존성이 생기는 것 같아서 service에서 하위 카테고리가 설정되지 않은 정렬된 List\<Category>로 넘긴 후 controller에서 변환하는 것으로 바꿨다.
-- controller에서 리스트를 받을 때 정렬이 되었다고 가정하고 받는 거라 의존성이 완전히 해소되지는 않은 것 같다. 그리고 이런 로직을 controller에 구현을 하는 것이 맞는지는 잘 모르겠다...
+- 처음에는 service에 해당 코드를 구현했다. 그런데 CategoryResponse로 반환을 하면 레이어 간의 의존성이 생기는 것 같아서 service에서 하위 카테고리가 설정되지 않은 정렬된 List\<Category>로 controller에 넘긴 후 dto class에서 변환하는 것으로 바꿨다.
+- controller에서 리스트를 받을 때 정렬이 되었다고 가정하고 받는 거라 의존성이 완전히 해소되지는 않은 것 같다. 그런데 DB에서 정렬할 수 있는 걸 굳이 정렬을 하지 않고 따로 정렬 메소드를 구현하는 것은 비효율적인 것 같이 이렇게 하기로 결정했다.
