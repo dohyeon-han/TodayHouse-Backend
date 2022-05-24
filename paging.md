@@ -95,12 +95,12 @@ public class OrderRepositoryImpl extends QuerydslRepositorySupport
 ```
 - 다음과 같이 코드를 최적화하였다.
 - 일반적인 paging보다는 빠르지만 코드의 양이 훨씬 길어지고 no offset 방식보다는 느리다. 또한 id 값이 너무 많아지면 성능상의 이슈가 발생할 수 있다.
-- 해당 코드에서 최적화를 더 진행할 수 있다. 
+- 여기서 더 최적화를 진행할 수 있다. 
 1. Entity 대신 DTO로 조회 
     - 영속성 컨텍스트의 관리를 받지 않고 필요한 데이터만 조회하여 조회 속도를 높일 수 있다.
     - DTO에 의존적이고 재사용성이 떨어진다는 단점이 있다.
 2. No offset 방식 사용
-    - 기존의 방식은 offset까지 데이터를 읽고 limit까지의 데이터를 반환하는 방식이었다면 no offset 방식은 조회 시작 부분을 where절로 빠르게 찾을 수 있어 limit의 값이 커지더라도 속도가 느려지는 것을 막을 수 있다.
+    - 기존의 방식은 offset까지 데이터를 읽고 limit까지의 데이터를 반환하는 방식이었다면 no offset 방식은 조회 시작 부분을 where절로 빠르게 찾을 수 있어 offset의 값이 커지더라도 속도가 느려지는 것을 막을 수 있다.
     - 일반적인 페이징 방식의 UI에서는 사용하기 힘들다.
     
 - 출처 : https://jojoldu.tistory.com/529
