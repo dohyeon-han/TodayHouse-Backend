@@ -13,3 +13,16 @@
             " order by r.depth",
             nativeQuery = true)
 ```
+
+## JPQL fetch join
+```java
+    @Query("select distinct st from Scrap sc inner join sc.story st where sc.story in :stories and sc.user =:user")
+    List<Story> findScrapedByStoriesAndUser(@Param("stories") List<Story> stories, @Param("user") User user);
+```
+- Story list와 User를 이용해 인자로 받은 Story list 중 유저가 스크랩한 story만을 조회하도록 코드를 구현하였는데 이런 오류가 발생하였다.
+```
+Caused by: org.hibernate.QueryException: query specified join fetching, but the owner of the fetched association was not present in the select list [FromElement{explicit,not a collection join,fetch join,fetch non-lazy properties,classAlias=st,role=com.todayhouse.domain.scrap.domain.Scrap.story,tableName=story,tableAlias=story1_,origin=scrap scrap0_,columns={scrap0_.story_id,className=com.todayhouse.domain.story.domain.Story}}] [select distinct st from com.todayhouse.domain.scrap.domain.Scrap sc inner join fetch sc.story st where sc.story in :stories and sc.user =:user]
+```
+- 문제는 fetch에 있었다.
+- fetch join은 entity 그래프를 참조하여 join한 상태로 entity를 가져오기 위해 사용하는데, 해당 쿼리는 연관관계의 주인인 Scrap이 아닌 Story만 가져오기 때문에 fetch join이 필요없다.
+- 따라서 fetch를 제거해주면 정상적으로 작동한다.
