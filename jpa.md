@@ -16,7 +16,7 @@
 
 ## JPQL fetch join
 ```java
-    @Query("select distinct st from Scrap sc inner join sc.story st where sc.story in :stories and sc.user =:user")
+    @Query("select distinct st from Scrap sc inner join fetch sc.story st where sc.story in :stories and sc.user =:user")
     List<Story> findScrapedByStoriesAndUser(@Param("stories") List<Story> stories, @Param("user") User user);
 ```
 - Story list와 User를 이용해 인자로 받은 Story list 중 유저가 스크랩한 story만을 조회하도록 코드를 구현하였는데 이런 오류가 발생하였다.
